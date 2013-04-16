@@ -12,10 +12,13 @@ $shm_id = shmop_open ($shm_address, "c", 0644, $shm_agreed_size);
 
 while ($line = get_line ()) {
 	$s = substr ($line, 0, $shm_agreed_size-1);
-	$len = strlen ($s);
-	for ($i = $len; $i <= $shm_agreed_size; $i++) {
+
+	// Replace the remaining shm message with whitespace otherwise parts of the 
+	// previously written data will linger.
+	for ($i = strlen ($s); $i <= $shm_agreed_size; $i++) {
 		$s .= " ";
 	}
+
 	shmop_write ($shm_id, $s, 0);
 }
 
